@@ -15,9 +15,11 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import openpyxl
 
 from pathlib import Path
-savePath = str(Path().absolute()) + "\\archive\\"
-storePath = str(Path().absolute()) + "\\pngs\\"
-imagePath = str(Path().absolute()) + "\\mana\\"
+
+save_path = os.getcwd() + "\\cube_hijinx\\archive\\"
+store_path = os.getcwd() + "\\cube_hijinx\\pngs\\"
+mana_symbol_path = os.getcwd() + "\\cube_hijinx\\mana\\"
+
 
 def translate_mana_cost(double, manacost):
     split_cost = manacost.replace('{', '').split('}')
@@ -97,12 +99,12 @@ def determine_splash(deck_colors):
     return splash_string
 
 def color_profile():
-    files = os.listdir(savePath)
+    files = os.listdir(save_path)
     players = {}
     params = {'format' : 'json'}
     
     for f in files:
-        wb = xlrd.open_workbook(savePath + f)
+        wb = xlrd.open_workbook(save_path + f)
                 
         play_sheet = wb.sheet_by_name('Play')
         for col in range(play_sheet.ncols):
@@ -213,7 +215,7 @@ def color_pie(key, value):
     zooms = [0.4,0.4,0.4,0.4,0.4]
 
     for i in range(5):
-        fn = "{}{}.png".format(imagePath,labels[i].lower())
+        fn = "{}{}.png".format(image_path,labels[i].lower())
         img_to_pie(fn, wedges[i], xy=positions[i], zoom=zooms[i] )
         wedges[i].set_zorder(10)
 
@@ -247,7 +249,7 @@ def winning_colors(wc_dict):
     for cp in listify:
         print( '{} - {} , {}'.format(cp.name, cp.times, cp.placing/cp.times))
 
-    image_name = storePath + 'winning_colors' +'.png'
+    image_name = store_path + 'winning_colors' +'.png'
     myFont = ImageFont.truetype('888_MRG.ttf', 52)
 
     canvas_x = 1080 #3
@@ -274,7 +276,7 @@ def winning_colors(wc_dict):
         curr_x = placeholder_x
         
         for symbol in entry.name:
-            temp_image = Image.open(imagePath + symbol_png[symbol])
+            temp_image = Image.open(image_path + symbol_png[symbol])
             new_image.paste(temp_image, (curr_x, curr_y))
             curr_x += 140
         draw.text((placeholder_x, curr_y+140), 'Times Drafted: {}'.format(entry.times), (255,255,255), font=myFont)
@@ -286,8 +288,8 @@ def winning_colors(wc_dict):
 
 def color_image(players):
 
-    image_name = storePath +'color_prof'+'.png'
-    files = os.listdir(savePath)
+    image_name = store_path +'color_prof'+'.png'
+    files = os.listdir(save_path)
     myFont = ImageFont.truetype('888_MRG.ttf', 64)
 
     wc_dict = {}
@@ -335,7 +337,7 @@ def color_image(players):
                     except:
                         wc_dict[new_prof] = [1,fnqy[symbol]]
                 else:
-                    temp_image = Image.open(imagePath + symbol_png[symbol])
+                    temp_image = Image.open(image_path + symbol_png[symbol])
                     new_image.paste(temp_image, (curr_x, curr_y))
                     curr_x += 140
             curr_y += 140
@@ -348,7 +350,9 @@ def color_image(players):
     new_image.save(image_name)
 
     winning_colors(wc_dict)
-    
+
+if __name__ == '__main__':
+    color_profile()
 
 
     
