@@ -14,8 +14,6 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 import openpyxl
 
-from pathlib import Path
-
 save_path = os.getcwd() + "\\cube_hijinx\\archive\\"
 store_path = os.getcwd() + "\\cube_hijinx\\pngs\\"
 mana_symbol_path = os.getcwd() + "\\cube_hijinx\\mana\\"
@@ -104,9 +102,8 @@ def color_profile():
     params = {'format' : 'json'}
     
     for f in files:
-        wb = xlrd.open_workbook(save_path + f)
-                
-        play_sheet = wb.sheet_by_name('Play')
+        wb = openpyxl.load_workbook(save_path + f)
+        play_sheet = wb['Play']
         for col in range(play_sheet.ncols):
             player_name = play_sheet.cell_value(0 , col)
             deck_symbols = ''
